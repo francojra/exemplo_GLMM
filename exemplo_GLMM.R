@@ -45,8 +45,11 @@ data$Outcome <- rbinom(n_individuals * n_measurements, size = 1, prob = 0.3)
 data$Covariate <- rnorm(n_individuals * n_measurements)
 
 # Ajuste do GLMM
-glmm_model <- glmer(Outcome ~ Covariate + (1|Individual), data = data, family = binomial)
+
+glmm_model <- glmer(Outcome ~ Covariate + (1|Individual), 
+                    data = data, family = binomial)
 
 # Visualize os resultados
+
 summary(glmm_model)
 
