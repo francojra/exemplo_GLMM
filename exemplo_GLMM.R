@@ -53,3 +53,54 @@ glmm_model <- glmer(Outcome ~ Covariate + (1|Individual),
 
 summary(glmm_model)
 
+# Segundo exemplo --------------------------------------------------------------------------------------------------------------------------
+
+# Gere dados de exemplo
+
+set.seed(123)
+n_parcelas <- 155
+n_tratamentos <- 5
+n_tempo <- 6
+
+data <- expand.grid(Parcela = 1:n_parcelas, Tratamento = 1:n_tratamentos, Tempo = 1:n_tempo)
+data$Diversidade <- rep(c(1, 2, 4, 8, 16), each = n_parcelas * n_tempo / n_tratamentos)
+data$Invasora <- rbinom(n_parcelas * n_tratamentos * n_tempo, size = 1, prob = 0.2)
+data$Tempo <- rep(1:n_tempo, each = n_parcelas * n_tratamentos)
+
+View(data)
+
+# Simulando dados de cobertura de espécies herbáceas como resposta
+
+data$CoberturaHerbaceas <- rnorm(n_parcelas * n_tratamentos * n_tempo, 
+                                 mean = 50, sd = 10)
+
+View(data)
+
+# Ajuste do GLMM
+
+glmm_model <- glmer(CoberturaHerbaceas ~ Diversidade + Invasora + 
+                      Tempo + (1|Parcela), 
+                      data = data)
+
+# Visualize os resultados
+
+summary(glmm_model)
+
+# Significância do modelo GLMM -------------------------------------------------------------------------------------------------------------
+
+# Instale o pacote se ainda não estiver instalado
+# install.packages("lmerTest")
+
+# Carregue o pacote
+
+library(lmerTest)
+
+# Ajuste do GLMM com a diversidade, espécie invasora e tempo
+
+glmm_model <- glmer(CoberturaHerbaceas ~ Diversidade + Invasora + Tempo + (1|Parcela), data = data, family = gaussian)
+
+# Teste de Wald para obter p-valores
+
+wald_test <- summary(glmm_model)$coefficients
+wald_test
+
