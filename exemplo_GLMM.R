@@ -99,8 +99,11 @@ library(lmerTest)
 
 glmm_model <- glmer(CoberturaHerbaceas ~ Diversidade + Invasora + Tempo + (1|Parcela), data = data, family = gaussian)
 
+# Teste de Wald usando anova()
+
+anova(glmm_model, test = "Chisq")
+
 # Teste de Wald para obter p-valores
 
-wald_test <- summary(glmm_model)$coefficients
+wald_test <- summary(glmm_model)$coefficients[, c(3, 5)]
 wald_test
-
